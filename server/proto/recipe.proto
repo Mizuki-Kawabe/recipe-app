@@ -1,0 +1,49 @@
+syntax = "proto3";
+package recipes;
+option go_package = "./;proto";
+
+
+message Ingredient {
+string name = 1;
+string amount = 2; // 例: "200g", "1 tbsp"
+}
+
+
+message Recipe {
+string id = 1;
+string title = 2;
+string description = 3;
+repeated Ingredient ingredients = 4;
+repeated string steps = 5;
+int64 created_at = 6;
+int64 updated_at = 7;
+}
+
+
+message GetRecipeRequest { string id = 1; }
+message GetRecipeResponse { Recipe recipe = 1; }
+
+
+message ListRecipesRequest { int32 page = 1; int32 page_size = 2; }
+message ListRecipesResponse { repeated Recipe recipes = 1; int32 total = 2; }
+
+
+message CreateRecipeRequest { Recipe recipe = 1; }
+message CreateRecipeResponse { Recipe recipe = 1; }
+
+
+message UpdateRecipeRequest { Recipe recipe = 1; }
+message UpdateRecipeResponse { Recipe recipe = 1; }
+
+
+message DeleteRecipeRequest { string id = 1; }
+message DeleteRecipeResponse {}
+
+
+service RecipeService {
+rpc GetRecipe(GetRecipeRequest) returns (GetRecipeResponse);
+rpc ListRecipes(ListRecipesRequest) returns (ListRecipesResponse);
+rpc CreateRecipe(CreateRecipeRequest) returns (CreateRecipeResponse);
+rpc UpdateRecipe(UpdateRecipeRequest) returns (UpdateRecipeResponse);
+rpc DeleteRecipe(DeleteRecipeRequest) returns (DeleteRecipeResponse);
+}
