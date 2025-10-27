@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import { client } from "./api";
-import {
-  ListRecipesRequest,
-  CreateRecipeRequest,
-  Recipe,
-  Ingredient,
-} from "./grpc/recipe_pb";
+import * as pb from "./grpc/recipe_pb";
+import React from "react";
 
 export default function App() {
-  const [recipes, setRecipes] = useState<Recipe.AsObject[]>([]);
+  const [recipes, setRecipes] = useState<pb.Recipe.AsObject[]>([]);
   const [title, setTitle] = useState("");
 
   const fetchList = async () => {
-    const req = new ListRecipesRequest();
+    const req = new pb.ListRecipesRequest();
     req.setPage(1);
     req.setPageSize(50);
     const res = await client.listRecipes(req, {});
@@ -20,15 +16,15 @@ export default function App() {
   };
 
   const create = async () => {
-    const recipe = new Recipe();
+    const recipe = new pb.Recipe();
     recipe.setTitle(title);
     recipe.setDescription("");
-    const ing = new Ingredient();
+    const ing = new pb.Ingredient();
     ing.setName("塩");
     ing.setAmount("少々");
     recipe.setIngredientsList([ing]);
 
-    const req = new CreateRecipeRequest();
+    const req = new pb.CreateRecipeRequest();
     req.setRecipe(recipe);
     await client.createRecipe(req, {});
     setTitle("");
